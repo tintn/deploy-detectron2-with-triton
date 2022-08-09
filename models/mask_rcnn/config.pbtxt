@@ -1,0 +1,37 @@
+platform: "pytorch_libtorch"
+default_model_filename: "model.ts"
+max_batch_size: 0
+input [
+  {
+    name: "image__0"
+    data_type: TYPE_UINT8
+    dims: [3, -1, -1]
+  }
+]
+output [
+  {
+    name: "bboxes__0"
+    data_type: TYPE_FP32
+    dims: [-1,4]
+  },
+  {
+    name: "classes__1"
+    data_type: TYPE_INT64
+    dims: [-1]
+  },
+  {
+    name: "masks__2"
+    data_type: TYPE_FP32
+    dims: [-1, 1, -1, -1]
+  },
+  {
+    name: "scores__3"
+    data_type: TYPE_FP32
+    dims: [-1, 1, -1, -1]
+  },
+  {
+    name: "shape__4"
+    data_type: TYPE_INT64
+    dims: [2]
+  }
+]
