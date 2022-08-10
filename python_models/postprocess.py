@@ -57,7 +57,6 @@ class TritonPythonModel:
         # Filter out predictions with low confidence scores
         scores = predictions['scores']
         predictions = {name: tensor[scores > 0.5, ...] for name, tensor in predictions.items()}
-        print(predictions['masks'].shape)
         # Paste masks to the full image
         full_masks = [
             self.paste_mask(mask[0, :, :], box, img_h, img_w, 0.5)
