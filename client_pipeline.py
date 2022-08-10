@@ -8,19 +8,19 @@ import numpy as np
 
 
 def test_infer(req_id, image_file, model_name, print_output=False):
-    img = np.array(Image.open(image_file))
-    img = np.ascontiguousarray(img.transpose(2, 0, 1))
+    with open(image_file, 'rb') as fi:
+        image_bytes = fi.read()
+    image_bytes = np.array([image_bytes], dtype=np.bytes_)
     # Define model's inputs
     inputs = []
-    inputs.append(httpclient.InferInput('image__0', img.shape, "UINT8"))
-    inputs[0].set_data_from_numpy(img)
+    inputs.append(httpclient.InferInput('IMAGE_BYTES', image_bytes.shape, "BYTES"))
+    inputs[0].set_data_from_numpy(image_bytes)
     # Define model's outputs
     outputs = []
-    outputs.append(httpclient.InferRequestedOutput('bboxes__0'))
-    outputs.append(httpclient.InferRequestedOutput('classes__1'))
-    outputs.append(httpclient.InferRequestedOutput('masks__2'))
-    outputs.append(httpclient.InferRequestedOutput('scores__3'))
-    outputs.append(httpclient.InferRequestedOutput('shape__4'))
+    outputs.append(httpclient.InferRequestedOutput('BBOXES'))
+    outputs.append(httpclient.InferRequestedOutput('CLASSES'))
+    outputs.append(httpclient.InferRequestedOutput('MASKS'))
+    outputs.append(httpclient.InferRequestedOutput('SCORES'))
     # Send request to Triton server
     triton_client = httpclient.InferenceServerClient(
         url="localhost:8000", verbose=False)
@@ -70,4 +70,4 @@ if __name__ == '__main__':
             for f in futures:
                 f.results()
         e = time.time()
-        print('FPS:', n_reqs/(e - s))
+        print(n_reqs/(e - s))
